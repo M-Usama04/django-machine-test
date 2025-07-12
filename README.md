@@ -233,3 +233,6 @@ Built on MacBook Pro 15" using VS Code, Python 3.13, Django 5, and DRF.
 - ✅ Role-based Authorization
 - ✅ Email Notifications
 
+## Note
+> ⚠️ This is a backend-only project built with Django REST Framework.
+> No frontend UI is included. Use tools like Postman or cURL to test APIs.
