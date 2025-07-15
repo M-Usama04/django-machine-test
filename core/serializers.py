@@ -27,6 +27,13 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         model = Client
         fields = ['client_name']
 
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user if request else None
+        if not user:
+            raise serializers.ValidationError("User is required to create client.")
+        return Client.objects.create(created_by=user, **validated_data)
+
 class ProjectDetailSerializer(serializers.ModelSerializer):
     client = serializers.CharField(source='client.client_name')
     users = UserSimpleSerializer(many=True)
@@ -34,7 +41,7 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['id', 'project_name', 'client', 'users', 'created_by', 'created_at']
+        fields = ['id', 'project_name', 'client', 'users', 'created_by', 'created_at', 'updated_at']
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
     users = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True)
@@ -42,34 +49,3 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['project_name', 'users']
-class ClientDetailSerializer(serializers.ModelSerializer):
-    created_by = serializers.CharField(source='created_by.username', read_only=True)
-    updated_at = serializers.DateTimeField(read_only=True)
-    projects = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Client
-        fields = ['id', 'client_name', 'projects', 'created_at', 'created_by', 'updated_at']
-
-    def get_projects(self, obj):
-        return [
-            {
-                "id": project.id,
-                "name": project.project_name
-            }
-            for project in obj.projects.all()
-        ]
-class ProjectSerializer(serializers.ModelSerializer):
-    client = serializers.CharField(source='client.client_name', read_only=True)
-    created_by = serializers.CharField(source='created_by.username', read_only=True)
-    users = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Project
-        fields = ['id', 'project_name', 'client', 'users', 'created_at', 'created_by']
-
-    def get_users(self, obj):
-        return [
-            {"id": user.id, "name": user.username}
-            for user in obj.users.all()
-        ]
