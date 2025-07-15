@@ -1,6 +1,6 @@
 # Django Machine Test - REST API
 
-## 🚀 Overview
+##  Overview
 
 This Django REST API project is designed to manage **Users**, **Clients**, and **Projects** as part of a Machine Test submission. It demonstrates full CRUD operations, token-based authentication, user-project assignment, and PostgreSQL integration using Django REST Framework.
 
@@ -23,7 +23,7 @@ This Django REST API project is designed to manage **Users**, **Clients**, and *
 
 ---
 
-## 🔮 Technology Stack
+## Technology Stack
 
 * Python 3.11+
 * Django 5.0+
@@ -33,7 +33,7 @@ This Django REST API project is designed to manage **Users**, **Clients**, and *
 
 ---
 
-## 📚 How Things Are Implemented
+## How Things Are Implemented
 
 ### Clients:
 
@@ -105,7 +105,7 @@ $ python manage.py createsuperuser
 $ python manage.py runserver
 ```
 
-## 🔍 Testing API Endpoints
+## Testing API Endpoints
 
 Use **Postman** or **cURL**:
 
@@ -115,7 +115,7 @@ Use **Postman** or **cURL**:
 
 ---
 
-## 📖 Test Cases Included
+##  Test Cases Included
 
 * Located in: `core/tests.py`
 * Tests covered:
@@ -142,7 +142,7 @@ $ python manage.py test
 
 ---
 
-## 📅 Built With
+##  Built With
 
 * MacBook Pro 15"
 * Python 3.13
@@ -153,7 +153,7 @@ $ python manage.py test
 
 ---
 
-## 🔐 License
+##  License
 
 This project is intended for educational and machine test evaluation purposes only.
 
