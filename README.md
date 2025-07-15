@@ -1,168 +1,164 @@
-# Django REST API – Machine Test Solution
+# Django Machine Test – Client & Project Management API (PostgreSQL)
 
-## 🚀 Project: Client, Project & User Management API
+## 🚀 Project Overview
 
-This Django REST API project is a complete solution for the machine test problem involving the management of Users, Clients, and Projects. The system is built using Django and Django REST Framework (DRF), following best practices and secure token authentication.
+This is a Django REST Framework (DRF) based backend system for managing **Users**, **Clients**, and **Projects** as part of a machine test. The application is powered by **PostgreSQL** and demonstrates clean architecture, token-based authentication, and modular design.
 
----
-
-## 📌 Features Implemented (As per Requirements)
-
-| Feature # | Requirement                                  | Status                               |
-| --------- | -------------------------------------------- | ------------------------------------ |
-| 1         | Register a client                            | ✅ `POST /api/clients/`               |
-| 2         | Fetch all client info                        | ✅ `GET /api/clients/`                |
-| 3         | Edit/Delete client info                      | ✅ `PATCH / DELETE /clients/<id>/`    |
-| 4         | Add projects under client & assign users     | ✅ `POST /api/clients/<id>/projects/` |
-| 5         | Retrieve projects assigned to logged-in user | ✅ `GET /api/projects/`               |
-
-Additional Considerations:
-
-- ✅ Many Users
-- ✅ Many Clients
-- ✅ One Client → Many Projects
-- ✅ One Project → Many Users (Many-to-Many)
+> 📊 **Review Purpose**: This README serves as a technical brief for the reviewing team to evaluate API structure, functionality, and codebase.
 
 ---
 
-## ⚙️ Technology Stack
+## ✨ Core Functionalities Implemented
 
-- Python 3.11+
-- Django 5.0+
-- Django REST Framework
-- Token Authentication (DRF AuthToken)
-- SQLite3 (default DB)
+| # | Feature Description                            | Endpoint                           | Status |
+| - | ---------------------------------------------- | ---------------------------------- | ------ |
+| 1 | Create a new client                            | `POST /api/clients/`               | ✅      |
+| 2 | Fetch all clients                              | `GET /api/clients/`                | ✅      |
+| 3 | Retrieve client details + associated projects  | `GET /api/clients/<id>/`           | ✅      |
+| 4 | Update client info                             | `PATCH /api/clients/<id>/`         | ✅      |
+| 5 | Delete a client                                | `DELETE /api/clients/<id>/`        | ✅      |
+| 6 | Create a project for a client and assign users | `POST /api/clients/<id>/projects/` | ✅      |
+| 7 | Fetch projects assigned to logged-in user      | `GET /api/projects/`               | ✅      |
+
+### Relationships
+
+* One Client ➔ Many Projects
+* One Project ➔ Many Users (M2M)
+* One User ➔ Many Assigned Projects
 
 ---
 
-## 🗂️ Folder Structure
+## 📊 Database Used
 
-```
-├── machine_test/              # Django project folder
-│   ├── settings.py            # Project settings
-│   ├── urls.py                # Root URLs (includes core app)
-│   └── ...
-├── core/                      # Core app
-│   ├── models.py              # Client, Project models
-│   ├── serializers.py         # DRF serializers
-│   ├── views.py               # ViewSets and logic
-│   ├── urls.py                # API routes
-│   └── admin.py               # Admin registrations
-├── manage.py
-└── README.md                  # This documentation file
+**PostgreSQL** (production-ready setup)
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'machine_test',
+        'USER': 'machine_test',
+        'PASSWORD': 'usama123',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 ```
 
 ---
 
-## 📦 Setup Instructions
+## 🛠️ Setup Instructions (Local Development)
 
 ```bash
-# Step 1: Clone and navigate
+# Clone repository
+https://github.com/M-Usama04/django-machine-test.git
 cd django-machine-test
 
-# Step 2: Create virtual env
+# Create virtual environment
 python3 -m venv venv
 source venv/bin/activate  # Mac/Linux
 
-# Step 3: Install requirements
+# Install dependencies
 pip install -r requirements.txt
 
-# Step 4: Run migrations
+# Run migrations
 python manage.py makemigrations
 python manage.py migrate
 
-# Step 5: Create superuser
+# Create superuser
 python manage.py createsuperuser
 
-# Step 6: Run the server
+# Run server
 python manage.py runserver
 ```
 
+Superuser Credentials (used for testing):
+
+```
+Username: Machine_test
+Password: Usama@123
+```
+
 ---
 
-##  Authentication (Token-Based)
+## 🔑 Authentication (Token-Based)
 
-### Endpoint
+**Login Endpoint:** `POST /api-token-auth/`
 
-`POST /api-token-auth/`
-
-### Request Body
+**Request Body:**
 
 ```json
 {
-  "username": "your_username",
-  "password": "your_password"
+  "username": "testuser",
+  "password": "testpass"
 }
 ```
 
-### Response
-
-```json
-{
-  "token": "abc123..."
-}
-```
-
-### Use in Headers
+**Use Token in Header:**
 
 ```
-Authorization: Token abc123...
+Authorization: Token your_token_here
 ```
 
 ---
 
-##  API Endpoints Summary
+## 🔄 API Endpoints Summary
 
-###  Clients
+### Clients
 
-| Method | URL            | Description                          |
-| ------ | -------------- | ------------------------------------ |
-| GET    | /api/clients/  | List all clients                     |
-| POST   | /api/clients/  | Create new client                    |
-| GET    | /api/clients// | Retrieve client detail with projects |
-| PATCH  | /api/clients// | Update client info                   |
-| DELETE | /api/clients// | Delete a client                      |
+| Method | Endpoint           | Description                          |
+| ------ | ------------------ | ------------------------------------ |
+| GET    | /api/clients/      | List all clients                     |
+| POST   | /api/clients/      | Create new client                    |
+| GET    | /api/clients/<id>/ | Retrieve a client and their projects |
+| PATCH  | /api/clients/<id>/ | Update client details                |
+| DELETE | /api/clients/<id>/ | Delete client                        |
 
-###  Projects (Under Client)
+### Projects under Client
 
-| Method | URL                     | Description                                  |
-| ------ | ----------------------- | -------------------------------------------- |
-| POST   | /api/clients//projects/ | Create project under a client + assign users |
+| Method | Endpoint                    | Description                            |
+| ------ | --------------------------- | -------------------------------------- |
+| POST   | /api/clients/<id>/projects/ | Add project to a client + assign users |
 
-### 📂 Logged-in User Projects
+### Logged-in User's Projects
 
-| Method | URL            | Description                            |
-| ------ | -------------- | -------------------------------------- |
-| GET    | /api/projects/ | List all projects assigned to the user |
+| Method | Endpoint       | Description                              |
+| ------ | -------------- | ---------------------------------------- |
+| GET    | /api/projects/ | List projects assigned to logged-in user |
 
 ---
 
-## ✅ Sample Inputs/Outputs
+## 🔢 Sample Request/Response
 
 ### Create Client
 
-```json
+```http
 POST /api/clients/
 {
   "client_name": "Infotech"
 }
 ```
 
-**Response:**
+**Response**:
 
 ```json
 {
-  "id": 1,
-  "client_name": "Infotech",
-  "created_by": "rohit",
-  "created_at": "2025-07-12T13:23:00",
-  "updated_at": null
+  "status": "success",
+  "message": "Client created successfully",
+  "data": {
+    "id": 1,
+    "client_name": "Infotech",
+    "created_by": "Machine_test",
+    "created_at": "2025-07-12T13:23:00",
+    "updated_at": null,
+    "projects": []
+  }
 }
 ```
 
-### Create Project for Client
+### Create Project
 
-```json
+```http
 POST /api/clients/1/projects/
 {
   "project_name": "Project A",
@@ -170,69 +166,89 @@ POST /api/clients/1/projects/
 }
 ```
 
-**Response:**
+**Response**:
 
 ```json
 {
-  "id": 1,
-  "project_name": "Project A",
-  "client": "Infotech",
-  "created_by": "ganesh",
-  "users": [
-    {
-      "id": 1,
-      "name": "Rohit"
-    }
-  ],
-  "created_at": "2025-07-12T13:25:00"
+  "status": "success",
+  "message": "Project created successfully",
+  "data": {
+    "id": 3,
+    "project_name": "Project A",
+    "client": "Infotech",
+    "users": [
+      {
+        "id": 1,
+        "username": "testuser"
+      }
+    ],
+    "created_by": "Machine_test",
+    "created_at": "2025-07-12T13:23:00",
+    "updated_at": null
+  }
 }
 ```
 
 ---
 
-## 🧪 Postman API Testing
+## 📈 Test Cases (DRF API Test Coverage)
 
-1. First, generate token: `POST /api-token-auth/`
-2. Add token in header: `Authorization: Token <your_token>`
-3. Test each endpoint with required body and method
+All unit tests are located in `core/tests.py` and validate:
 
----
+* ✅ Client creation (201)
+* ✅ Get all clients (200)
+* ✅ Client update (PATCH)
+* ✅ Project creation under client
+* ✅ Get user-assigned projects
 
-## 📁 Admin Panel
+**Run all tests:**
 
-URL: `http://127.0.0.1:8000/admin`
-
-Use superuser credentials to:
-
-- Manage Users
-- View Clients & Projects
-- View DRF Auth Tokens
+```bash
+python manage.py test
+```
 
 ---
 
-## ✨ Notes
+## 🔹 Admin Panel Access
 
-- DRF ViewSets + Routers used
-- Full modular structure
-- Fully authenticated and protected endpoints
-- Easy to extend
+```
+http://127.0.0.1:8000/admin/
+```
 
----
+Login with superuser to:
 
-## 👨‍💻 Author
-
-**Usama Mulla**\
-Built on MacBook Pro 15" using VS Code, Python 3.13, Django 5, and DRF.
+* Manage Users
+* View Clients/Projects
+* Tokens and related models
 
 ---
 
-## 🧭 Future Enhancements
+## 🔹 Contribution & Feedback
 
-- ✅ Swagger/OpenAPI Docs (DRF Yasg)
-- ✅ Pagination and Filtering
-- ✅ Role-based Authorization
-- ✅ Email Notifications
+* This repo is **public** but write access is limited to the owner.
+* Others may **Fork** or **Open Issues** for suggestions.
 
-## Note
-> ⚠️ This is a backend-only project built with Django REST Framework.
-> No frontend UI is included. Use tools like Postman or cURL to test APIs.
+---
+
+## 🙌 Author
+
+**Usama Mulla**
+
+Built for machine test submission. Feedback & collaboration welcome.
+
+---
+
+## 🚨 Important Notes
+
+* No frontend UI included. API-only backend.
+* Use Postman/cURL for testing.
+* Project follows best practices with token auth and PostgreSQL.
+
+---
+
+## 🎯 Future Work (Optional)
+
+* Swagger/OpenAPI docs
+* Pagination, Filtering, Search
+* Dockerization & CI
+* Rate limiting & permissions
